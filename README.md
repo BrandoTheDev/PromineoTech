@@ -1,7 +1,8 @@
 # PromineoTech HomeWork 
 
 A simple repository used to house and organize homework assignments.
-My convention for navigating will be Module -> Week(n) -> Assignment(s)
+
+My convention for navigating will be: Module -> Week(n) -> Assignment(s)
 
 Example:
 
