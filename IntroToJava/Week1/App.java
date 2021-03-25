@@ -6,8 +6,6 @@ public class App {
 		// Inside the main method, create two variables for the following real-life examples and assign them values
 		double itemPrice1 = 42.00;
 		double itemPrice2 = 13.37;
-		
-		//Declaring and Initializing variables to avoid errors in Question 2
 		double moneyInWallet1 = 100.00;
 		double moneyInWallet2 = 100.00;
 		int numberOfFriends = 40;
