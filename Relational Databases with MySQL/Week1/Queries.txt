@@ -1,5 +1,5 @@
 1. Show all employees who were born before 1965-01-01
-SELECT * FROM employees WHERE birth_date < "1965-01-01"
+SELECT * FROM employees WHERE birth_date < "1965-01-01";
 
 2. Show all employees who are female and were hired after 1990
 SELECT * FROM employees WHERE gender = "F" AND hire_date > "1990-12-31";
