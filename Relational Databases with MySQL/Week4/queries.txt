@@ -1,0 +1,24 @@
+DELIMITER $$ 
+CREATE PROCEDURE all_m_emps()
+SELECT * FROM employees where gender = "M" LIMIT 20; 
+$$
+
+DELIMITER $$ 
+CREATE PROCEDURE employee_list()
+select CONCAT(first_name, " ", last_name) as Full_Name from employees order by Full_Name asc LIMIT 20;
+$$
+
+DELIMITER $$ 
+CREATE PROCEDURE all_f_emps()
+SELECT * FROM employees where gender = "F" LIMIT 20; 
+$$
+
+DELIMITER $$ 
+CREATE PROCEDURE top_ten()
+select * from employees where emp_no < 10011 LIMIT 10;
+$$
+
+DELIMITER $$ 
+CREATE PROCEDURE newest_ten()
+select * from employees order by emp_no desc limit 10;
+$$
