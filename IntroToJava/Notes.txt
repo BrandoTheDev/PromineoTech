@@ -1,0 +1,119 @@
+Git Workflow: Pull Down -> Make changes -> stage changes -> snapshot changes -> push changes -> merge branch
+
+James Gosling 1995 Sun Microsystems -> Creation of Java
+Oracle now owns Java
+
+Java is statically typed
+The type of a variable is known at compile-time instead of at run-time. 
+Common examples of statically-typed languages include Java, C, C++, FORTRAN, Pascal and Scala.
+
+IDE -> Integrated Development Environment
+
+8 primitive data types:
+int 	- integer 
+double 	- decimal palces 32.89235
+float	- precision decimal data type 45.3987
+long 	- like an int, numbers can be higher
+short 	- like an int, less of number range
+byte 	- 8 bits of data
+char 	- a single character
+boolean - true or false
+
+Java File 		-> .Java
+Java Archive 	-> .jar
+
+StringBuilder does not create new strings in memory
+SB allows you to build a string then use .toString()
+to turn sb into a string :)
+StringBuilder is also mutable as strings are not 
+
+
+* A list is a collection like how a dog is an animal *
+
+		** List
+		// Allows duplicates
+		// Keeps elements ordered by index
+		// Allows null
+		// Common implementations: ArrayList, LinkedList, Vector
+
+        List<String> names = new ArrayList<String>();
+		names.add("A");
+
+
+        ** Set
+		// Does NOT allow duplicates
+		// Does NOT hold an order
+        // Allows null
+        // Common implementations: HashSet, LinkedHashSet, TreeSet
+
+		Set<String> states = new HashSet<String>();
+		states.add("Alabama");
+
+
+        ** Map
+		// Key, Value pairs (Dictionary)
+		// Common implementations: HashMap, LinkedHashMap, TreepMap, Hashtable
+        Map<Integer, String> placements = new HashMap<Integer, String>();
+        
+
+Four Pillars of OOP 
+1. Abstraction		
+Abstraction means using simple things to represent complexity. 
+We all know how to turn the TV on, but we don’t need to know how it works in order to enjoy it. 
+In Java, abstraction means simple things like objects, classes, and variables represent more complex underlying code and data. 
+This is important because it lets avoid repeating the same work multiple times.
+
+2. Encapsulation
+This is the practice of keeping fields within a class private, then providing access to them via public methods. 
+It’s a protective barrier that keeps the data and code safe within the class itself. 
+This way, we can re-use objects like code components or variables without allowing open access to the data system-wide.
+
+3. Inheritance
+This is a special feature of Object Oriented Programming in Java. 
+It lets programmers create new classes that share some of the attributes of existing classes. 
+This lets us build on previous work without reinventing the wheel.
+
+4. Polymorphism
+This Java OOP concept lets programmers use the same word to mean different things in different contexts. 
+One form of polymorphism in Java is method overloading. 
+The other form is method overriding. 
+
+method overriding -> Uses the annotation @Override
+Overriding is a feature that allows a subclass or child class to provide a specific,
+implementation of a method that is already provided by one of its super-classes or parent classes. 
+When a method in a subclass has the same name, same parameters or signature and same return type(or sub-type),
+as a method in its super-class, then the method in the subclass is said to override the method in the super-class.
+^ Run time polymorphism
+
+method overloading
+Overloading allows different methods to have the same name, but different signatures 
+where the signature can differ by the number of input parameters or type of input parameters or both. 
+Overloading is related to compile-time (or static) polymorphism.
+
+
+Access Modifiers:
+1. Public 		- Accessible every where
+2. Private 		- Only accessible within the class itself
+3. Protected 	- Accessible within the class, other classes in the same package, all subclasses
+4. No modifier 	- same as protected, except not accessible in a subclass in different package
+
+
+Best Practices for OOP Concepts in Java
+Since the aim of OOP concepts in Java is to save time without sacrificing security and ease of use, the best practices are all oriented toward advancing that main goal.
+
+DRY (Don’t Repeat Yourself). 
+This is the core concept in Java. 
+You should never have two blocks of identical code in two different places. 
+Instead, have one method you use for different applications.
+
+If you expect your Java code to change in the future, encapsulate it by making all variables and methods private at the outset. 
+As the code changes, increase access to “protected” as needed, but not too public.
+
+Single Responsibility. 
+Another best practice for OOP concepts in Java is the Single Responsibility Principle. 
+Simply put, a class should always have only one functionality. 
+That way, it can be called and/or extended on its own when new uses arise for it, without causing coupling between different functionalities.
+
+Open Closed Design. 
+Make all methods and classes Closed for modification but Open for an extension. 
+That way, tried and tested code can remain static but can be modified to perform new tasks as needed.
