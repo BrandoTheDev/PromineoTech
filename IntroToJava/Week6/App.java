@@ -10,14 +10,14 @@ public class App {
 	deck.shuffle();
 
 	// Loop for every card in the deck. 52 cards / 2 players = 26
-	for (int i = 1; i < 26; i++) {
+	for (int i = 0; i < 26; i++) {
 	    player1.draw(deck);
 	    player2.draw(deck);
 	}
 
 	// Flip through every card in both players hands to see who has the higher value
 	// per turn
-	for (int i = 1; i < 26; i++) {
+	for (int i = 0; i < 26; i++) {
 
 	    int player1Card = player1.flip(player1.flipCard());
 	    int player2Card = player2.flip(player2.flipCard());
