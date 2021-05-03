@@ -17,7 +17,7 @@ public class App {
 		}
 		
 		// Flip through every card in both players hands to see who has the higher value per turn
-		for (int i = 1; i < 26; i++) {
+		for (int i = 0; i < 26; i++) {
 
 			int player1Card = player1.flip(player1.flipCard());
 			int player2Card = player2.flip(player2.flipCard());
@@ -36,7 +36,7 @@ public class App {
 		}
 		
 		// After the loop, compare the final score from each player
-		// Print the final score of each player and either “Player 1”, “Player 2”, or “Draw” depending on which score is higher or if they are both the same.
+		// Print the final score of each player and either â€œPlayer 1â€, â€œPlayer 2â€, or â€œDrawâ€ depending on which score is higher or if they are both the same.
 		int player1Score = player1.getScore();
 		int player2Score = player2.getScore();
 		
