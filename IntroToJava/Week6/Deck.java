@@ -6,7 +6,6 @@ public class Deck {
 	public List<Card> cards = new ArrayList<Card>();
 	
 	public Deck() {
-		Card ace = new Card("ace", 1);
 		Card two = new Card("two", 2);
 		Card three = new Card("three", 3);
 		Card four = new Card("four", 4);
@@ -19,6 +18,7 @@ public class Deck {
 		Card jack = new Card("jack", 11);
 		Card queen = new Card("queen", 12);
 		Card king = new Card("king", 13);
+		Card ace = new Card("ace", 14);
 	
 		for(int i = 0; i < 4; i ++) {
 			cards.add(ace);
