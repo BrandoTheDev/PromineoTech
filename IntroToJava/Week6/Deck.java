@@ -1,50 +1,43 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Deck {
-	public List<Card> cards = new ArrayList<Card>();
-	
-	public Deck() {
-		Card two = new Card("two", 2);
-		Card three = new Card("three", 3);
-		Card four = new Card("four", 4);
-		Card five = new Card("five", 5);
-		Card six = new Card("six", 6);
-		Card seven = new Card("seven", 7);
-		Card eight = new Card("eight", 8);
-		Card nine = new Card("nine", 9);
-		Card ten = new Card("ten", 10);
-		Card jack = new Card("jack", 11);
-		Card queen = new Card("queen", 12);
-		Card king = new Card("king", 13);
-		Card ace = new Card("ace", 14);
-	
-		for(int i = 0; i < 4; i ++) {
-			cards.add(ace);
-			cards.add(two);
-			cards.add(three);
-			cards.add(four);
-			cards.add(five);
-			cards.add(six);
-			cards.add(seven);
-			cards.add(eight);
-			cards.add(nine);
-			cards.add(ten);
-			cards.add(jack);
-			cards.add(queen);
-			cards.add(king);
-		}
-		
-	}
-	
-	public void shuffle() {
-		Collections.shuffle(cards);
-	} 
+    private List<Card> cards = new ArrayList<Card>();
+    private Map<Integer, String> rankAndValue = new HashMap<Integer, String>();
+    private String[] suits = { " of Hearts", " of Spades", " of Diamonds", " of Clubs" };
 
-	
-	public Card draw() {
-		Card removedFromDeck =  cards.remove(0);
-		return removedFromDeck;
+    public Deck() {
+	initCardMap();
+	for (String suit : suits) {
+	    rankAndValue.forEach((value, name) -> cards.add(new Card(name, suit, value)));
 	}
+    }
+
+    private void initCardMap() {
+	rankAndValue.put(2, "Two");
+	rankAndValue.put(3, "Three");
+	rankAndValue.put(4, "Four");
+	rankAndValue.put(5, "Five");
+	rankAndValue.put(6, "Six");
+	rankAndValue.put(7, "Seven");
+	rankAndValue.put(8, "Eight");
+	rankAndValue.put(9, "Nine");
+	rankAndValue.put(10, "Ten");
+	rankAndValue.put(11, "Jack");
+	rankAndValue.put(12, "Queen");
+	rankAndValue.put(13, "King");
+	rankAndValue.put(14, "Ace");
+    }
+
+    public void shuffle() {
+	Collections.shuffle(cards);
+    }
+
+    public Card draw() {
+	Card removedFromDeck = cards.remove(0);
+	return removedFromDeck;
+    }
 }
