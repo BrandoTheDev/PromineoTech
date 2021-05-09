@@ -1,7 +1,7 @@
 public class CrudLauncher {
 
     public static void main(String[] args) {
-	DBConnector.run();
-
+	DBConnector DBC = new DBConnector();
+	DBC.run();
     }
 }
