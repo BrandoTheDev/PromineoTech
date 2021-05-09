@@ -7,46 +7,32 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class DBConnector {
-    /**
-     * Could use a scanner for console or listeners for GUIs Then save/read to a
-     * file for persistence, encrypting their password & hiding it from screen using
-     * the Console library but for simplicity sake I'm using hard coded values
-     */
-    private String userName = "promineoadmin";
-    private String userPass = "promineoadmin";
-    private String driver = "jdbc";
-    private String dbType = "mysql";
-    private String ip = "localhost";
-    private String port = "3306";
-    private String database = "promineotech";
-    private String fullUrl = String.format("%s:%s://%s:%s/%s", driver, dbType, ip, port, database);
 
-    private Connection conn = null;
-    private PreparedStatement stmt = null;
-    private ResultSet rs = null;
+    private LoginInfo login;
+    private Connection connection;
+    private PreparedStatement statement;
+    private ResultSet resultSet;
     private static Scanner scanner = new Scanner(System.in);
 
-    /**
-     * Setting the class variable connector at creation to be used through out the
-     * class Reading out the table rows one time (This would be a terrible idea on a
-     * real database that has hundreds of thousands of rows.) But for the sake of
-     * time im calling it to also set the class statement variable
-     */
+    public DBConnector(String userName, String userPass, String driver, String dbType, String ip, String port,
+	    String database, String table) {
+	this.login = new LoginInfo(userName, userPass, driver, dbType, ip, port, database, table);
+    }
+
     public DBConnector() {
-	setConn();
-	readTable();
+	this.login = new LoginInfo();
+	setConnection();
     }
 
     /**
-     * Attempts to make a connection to a database Sets the conn variable and prints
-     * successful or prints out errors if failed
+     * Moved everything into its own LoginInfo class You can set every value with
+     * its constructor or call it with no params for default values
      */
-    private void setConn() {
+    private void setConnection() {
 	try {
-	    System.out.println("Testing connection to database...");
-	    Connection conn = DriverManager.getConnection(fullUrl, userName, userPass);
+	    System.out.println("Testing our connection to the database...");
+	    this.connection = DriverManager.getConnection(login.getFullUrl(), login.getUserName(), login.getUserPass());
 	    System.out.println("*** Connected successfully! *** \n\n");
-	    this.conn = conn;
 	} catch (SQLException ex) {
 	    System.out.println("SQLException: " + ex.getMessage());
 	    System.out.println("SQLState: " + ex.getSQLState());
@@ -55,24 +41,25 @@ public class DBConnector {
     }
 
     /**
-     * Reads in the entire vehicle table. The worst example as its not dynamic,
-     * terrible for larger sets, uses statements instead of prepared statements
+     * Ignoring SOLID principle and having this function check if we have a
+     * connection if not then call our function to connect
      * 
-     * If we lose connection it will call setConn again
+     * Reads EVERYTHING from the table -- DO NOT USE ON BIG DATABASES I'd hate to
+     * see the time it takes to read a bigger table.
      */
     private void readTable() {
-	if (conn == null) {
-	    setConn();
+	if (connection == null) {
+	    setConnection();
 	} else {
 	    try {
-		String query = "select * from vehicles";
-		stmt = conn.prepareStatement(query);
-		rs = stmt.executeQuery(query);
+		String query = "select * from " + login.getTable();
+		statement = connection.prepareStatement(query);
+		resultSet = statement.executeQuery(query);
 
 		System.out.println("List of Vehicles:");
-		while (rs.next()) {
-		    System.out.println(String.format("#%o | Make: %s | Model: %s | Year: %s |", rs.getInt(1),
-			    rs.getString(2), rs.getString(3), rs.getString(4)));
+		while (resultSet.next()) {
+		    System.out.println(String.format("#%o | Make: %s | Model: %s | Year: %s |", resultSet.getInt(1),
+			    resultSet.getString(2), resultSet.getString(3), resultSet.getString(4)));
 		}
 
 	    } catch (SQLException ex) {
@@ -83,46 +70,72 @@ public class DBConnector {
 	}
     }
 
-    /**
-     * Updates a row based on the given Id, arguments can be empty strings to
-     * represent that field not changing
-     */
-    private void updateValue() throws SQLException {
+    // TODO : Setup error catching
+
+    private void updateMenu() throws SQLException {
+	String make, model, year;
+	int option;
 	System.out.print("\n\nPlease enter the id you would like to update: #");
 	int vehicleId = scanner.nextInt();
 
-	System.out.print("Enter new Make: ");
-	String make = scanner.nextLine().trim();
-	System.out.print("Enter new Model: ");
-	String model = scanner.nextLine().trim();
-	System.out.print("Enter new Year: ");
-	String year = scanner.nextLine().trim();
+	do {
+	    System.out.println();
+	    System.out.println("Choose one of the following to update:\n1. Make\n2. Model\n3. Year\n4. Exit");
+	    System.out.println("You are currently updating vehicle #" + vehicleId);
+	    option = scanner.nextInt();
+	    switch (option) {
+	    case 1:
+		System.out.println("Please enter a new Make:");
+		make = scanner.next();
+		updateValue(vehicleId, "make", make);
+		break;
+	    case 2:
+		System.out.println("Please enter a new Model:");
+		model = scanner.next();
+		updateValue(vehicleId, "model", model);
+		break;
+	    case 3:
+		System.out.println("Please enter a new Year:");
+		year = scanner.next();
+		updateValue(vehicleId, "year", year);
+		break;
+	    default:
+		System.out.println("Invalid choice. Please choose 1, 2, 3, or 4");
+	    }
+	} while (option != 4);
 
-	StringBuilder updateStr = new StringBuilder();
-	if (!make.isEmpty()) {
-	    updateStr.append(String.format(" make = '%s'", make));
-	}
-	if (!model.isEmpty()) {
-	    updateStr.append(String.format(" model = '%s'", model));
-	}
-	if (!year.isEmpty()) {
-	    updateStr.append(String.format(" year = '%s'", year));
-	}
-	String query = String.format("update vehicles set %s where vehicle_id = %o", updateStr.toString(), vehicleId);
-	stmt.executeUpdate(query);
     }
 
     /**
-     * Attempts to delete a given row
-     * <p>
-     * Because we are using auto_increment with InnoDB the id will not be reused
+     * Updates a row given specific column and value to fit into a where clause This
+     * is only used in our updateMenu() switch statement.
+     * 
+     * @param VehicleID      The ID of the vehicle we want to work with
+     * @param columnToUpdate Either Make, Model or Year
+     * @param updateValue    The new value to overwrite the existing value
+     * @throws SQLException The usual suspect in most of my errors
+     */
+    private void updateValue(int VehicleID, String columnToUpdate, String updateValue) throws SQLException {
+	String query = String.format("update vehicles set %s = '%s' where vehicle_id = %o", columnToUpdate, updateValue,
+		VehicleID);
+
+	statement = connection.prepareStatement(query);
+	statement.executeUpdate(query);
+	System.out.println("Records have been updated.");
+
+    }
+
+    /**
+     * Attempts to delete a row given an ID Doesnt check if row exists
+     * 
+     * @throws SQLException
      */
     private void deleteRow() throws SQLException {
 	try {
 	    System.out.print("Enter the vehicle ID to delete: ");
 	    int vehicleId = scanner.nextInt();
 	    String query = "delete from vehicles where vehicle_id =" + vehicleId;
-	    stmt.executeUpdate(query);
+	    statement.executeUpdate(query);
 	} catch (InputMismatchException ime) {
 	    System.out.println("Invalid option. Please enter a number");
 	}
@@ -130,46 +143,59 @@ public class DBConnector {
     }
 
     /**
-     * Attempts to create a new row in our vehicle table
+     * Creates a row in our table, might turn this into a switch statement Doesnt
+     * handle errors or invalid entries at this time
      * 
      * @throws SQLException
      */
     private void createRow() throws SQLException {
 	System.out.print("\n\nPlease enter the id you would like to create: #");
 	int vehicleId = scanner.nextInt();
-	System.out.print("Enter new Make: ");
-	String make = scanner.next().trim();
-	System.out.print("Enter new Model: ");
-	String model = scanner.next().trim();
-	System.out.print("Enter new Year: ");
-	String year = scanner.next().trim();
+	String make, model, year, query;
 
-	String query = String.format("insert into vehicles values (%o, '%s', '%s', '%s')", vehicleId, make, model,
-		year);
+	do {
+	    System.out.print("Enter new Make: ");
+	    make = scanner.next().trim();
+
+	} while (make.length() <= 0);
+
+	do {
+	    System.out.print("Enter new Model: ");
+	    model = scanner.next().trim();
+
+	} while (model.length() <= 0);
+
+	do {
+	    System.out.print("Enter new Year: ");
+	    year = scanner.next().trim();
+
+	} while (year.length() <= 0);
+
+	query = String.format("insert into vehicles values (%o, '%s', '%s', '%s')", vehicleId, make, model, year);
 	System.out.println(query);
-	stmt.executeUpdate(query);
+	statement.executeUpdate(query);
 
     }
 
     /**
-     * Closes the connection to the database and closes the scanner as well
+     * Making sure we close everything for good practice We dont want any memory
+     * leaks!!
      * 
      * @throws SQLException
      */
     private void close() throws SQLException {
-	rs.close();
-	stmt.close();
-	conn.close();
+	resultSet.close();
+	statement.close();
+	connection.close();
 	scanner.close();
 	System.out.println("\n *** Disconnected from Database. ***");
     }
 
     /**
-     * Handles the setup so we can private all our functions
+     * My main menu loop
      */
-    public static void run() {
+    public void run() {
 	try {
-	    DBConnector DBC = new DBConnector();
 	    int option = 0;
 
 	    do {
@@ -181,19 +207,19 @@ public class DBConnector {
 
 		switch (option) {
 		case 1:
-		    DBC.readTable();
+		    readTable();
 		    break;
 		case 2:
-		    DBC.updateValue();
+		    updateMenu();
 		    break;
 		case 3:
-		    DBC.deleteRow();
+		    deleteRow();
 		    break;
 		case 4:
-		    DBC.createRow();
+		    createRow();
 		    break;
 		case 5:
-		    DBC.close();
+		    close();
 		    break;
 		default:
 		    System.out.println("Please enter a valid option 1-4");
