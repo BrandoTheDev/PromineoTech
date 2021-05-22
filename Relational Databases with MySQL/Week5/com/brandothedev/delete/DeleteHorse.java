@@ -28,7 +28,7 @@ public class DeleteHorse {
 	    System.out.println("Successfully deleted #" + id + " from the table.");
 	    preparedStatement.close();
 	} catch (Exception e) {
-	    System.out.println("Something fucked up");
+	    System.out.println("Error in the delete class");
 	    e.printStackTrace();
 	}
     }
