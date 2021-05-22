@@ -25,19 +25,16 @@ public class MainHorse {
 	/*
 	 * Example(s) of the CreateHorse Class
 	 */
-	CreateHorse.create("Chevy", "Corvette", "2007");// INSERT INTO VEHICLES (make, model, year) VALUES("Chevy",
-							// "Corvette", "2007")";
+	CreateHorse.create("Chevy", "Corvette", "2007");// INSERT INTO VEHICLES (make, model, year) VALUES("Chevy", "Corvette", "2007")";
 
 	/*
 	 * Example(s) of the ReadHorse Class
 	 */
 	ReadHorse.read(20); // SELECT * FROM VEHICLES LIMIT 20
 	ReadHorse.read("", "", "2007", 20); // SELECT * FROM VEHICLES WHERE make="" OR model="" OR year="2007" LIMIT 20
-	ReadHorse.read("", "Mustang", "", 20); // SELECT * FROM VEHICLES WHERE make="" OR model="Mustang" OR year=""
-					       // LIMIT 20
+	ReadHorse.read("", "Mustang", "", 20); // SELECT * FROM VEHICLES WHERE make="" OR model="Mustang" OR year="" LIMIT 20
 	ReadHorse.read("Ford", "", "", 20); // SELECT * FROM VEHICLES WHERE make="Ford" OR model="" OR year="" LIMIT 20
-	ReadHorse.read("Ford", "Mustang", "2007", 20); // SELECT * FROM VEHICLES WHERE make="Ford" OR model="Mustang" OR
-						       // year="2007" LIMIT 20
+	ReadHorse.read("Ford", "Mustang", "2007", 20); // SELECT * FROM VEHICLES WHERE make="Ford" OR model="Mustang" OR year="2007" LIMIT 20
 
 	/*
 	 * Example(s) of the UpdateHorse Class
