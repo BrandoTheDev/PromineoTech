@@ -46,7 +46,7 @@ public class ReadHorse {
 
 	    preparedStatement.close();
 	} catch (Exception e) {
-	    System.out.println("Something fucked up");
+	    System.out.println("Error in the reading class");
 	    e.printStackTrace();
 	}
     }
@@ -75,7 +75,7 @@ public class ReadHorse {
 
 	    preparedStatement.close();
 	} catch (Exception e) {
-	    System.out.println("Something fucked up");
+	    System.out.println("Error in the reading class");
 	    e.printStackTrace();
 	}
     }
